@@ -27,7 +27,7 @@ void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate
   std::normal_distribution<double> noise_y(0.0, std[1]);
   std::normal_distribution<double> noise_t(0.0, std[2]);
 
-  if(std::abs(yaw_rate) > 0.001) { // non-zero yaw rate
+  if(std::abs(yaw_rate) > 0.0005) { // non-zero yaw rate
     for(int i=0; i<num_particles_; i++) {
       particles_[i].theta += yaw_rate * delta_t + noise_t(gen_);
       particles_[i].theta = std::fmod(particles_[i].theta, 2*M_PI);

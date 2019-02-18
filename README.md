@@ -22,3 +22,13 @@ This project implements a 2 dimensional particle filter in C++. We are given a m
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd $_`
 3. Compile: `cmake .. && make`
+
+## Map
+
+`data/map_data.txt` includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns
+
+1. x position
+2. y position
+3. landmark id
+
+
