@@ -37,7 +37,8 @@ int main() {
       // if not initialized, initialize with GPS data
       particle_filter.init(sense_x, sense_y, sense_theta, sigma_pos);
     } else {
-      // 
+      // run the prediction step
+      particle_filter.prediction(delta_t, prev_velocity, prev_yawrate, sigma_pos);
     }
     particle_t best_particle;
     best_particle.x = sense_x;
