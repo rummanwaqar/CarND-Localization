@@ -29,7 +29,7 @@ SimIO::SimIO(int port, ProcessCb cb) : port_(port), callbackFunc_(cb) {
           std::vector<float> y_sense = string_to_vec(j[1]["sense_observations_y"]);
           assert(x_sense.size() == y_sense.size());
           std::vector<landmark_t> noisy_observations;
-          for(int i = 0; i < x_sense.size(); ++i) {
+          for(size_t i = 0; i < x_sense.size(); ++i) {
             landmark_t obs;
             obs.x = x_sense[i];
             obs.y = y_sense[i];

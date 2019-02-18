@@ -40,6 +40,11 @@ int main() {
       // run the prediction step
       particle_filter.prediction(delta_t, prev_velocity, prev_yawrate, sigma_pos);
     }
+
+    // Update the weights and resample
+    particle_filter.updateWeights(sensor_range, sigma_landmark, observations, map);
+
+
     particle_t best_particle;
     best_particle.x = sense_x;
     best_particle.y = sense_y;

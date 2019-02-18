@@ -1,6 +1,7 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
+#include <cmath>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -8,6 +9,24 @@
 #include <exception>
 
 #include "types.hpp"
+
+/**
+ * Computes the Euclidean distance between two 2D points.
+ * @param (x1,y1) x and y coordinates of first point
+ * @param (x2,y2) x and y coordinates of second point
+ * @output Euclidean distance between two 2D points
+ */
+inline double dist(double x1, double y1, double x2, double y2) {
+  return std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+/**
+ * Calculates 2D gaussian probability
+ */
+inline double gaussian2d(double x, double y, double ux, double uy, double sigmax, double sigmay) {
+  return (std::exp(-((x - ux) * (x - ux) / (2 * sigmax * sigmax) + (y - uy) * (y - uy) / (2 * sigmay * sigmay))))
+         / (2 * M_PI * sigmax * sigmay);
+}
 
 /**
  * Reads map data from a file.

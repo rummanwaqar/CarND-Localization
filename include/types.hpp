@@ -6,8 +6,8 @@
 // represents a single landmark
 struct landmark_t {
   int id;     // landmark id
-  float x;    // x-position
-  float y;    // y-position
+  double x;    // x-position
+  double y;    // y-position
 };
 
 // represents a single particle state

@@ -2,8 +2,9 @@
 #define PARTICLE_FILTER_H
 
 #include <random>
-#include <chrono>
 #include <cmath>
+#include <limits>
+#include "json.h"
 
 #include "types.hpp"
 
@@ -13,7 +14,7 @@ class ParticleFilter {
    * Constructor
    * @param num_particles Number of particles
    */
-  ParticleFilter(int num_particles) :
+  explicit ParticleFilter(int num_particles) :
     num_particles_(num_particles), is_initialized_(false) {}
 
   /*
@@ -41,8 +42,34 @@ class ParticleFilter {
    * @param velocity Velocity of car from t to t+1 [m/s]
    * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
    */
-  void prediction(double delta_t, double velocity, double yaw_rate,
-    double std_pos[]);
+  void prediction(double delta_t, double velocity, double yaw_rate, double std[]);
+
+  /**
+   * dataAssociation Finds which observations correspond to which landmarks
+   *   (by using a nearest-neighbors data association).
+   * @param predicted Vector of predicted landmark observations (map)
+   * @param observations Vector of landmark observations
+   */
+  void dataAssociation(std::vector<landmark_t> predicted,
+                       std::vector<landmark_t>& observations);
+
+  /**
+   * updateWeights Updates the weights for each particle based on the likelihood
+   *   of the observed measurements.
+   * @param sensor_range Range [m] of sensor
+   * @param std_landmark[] Array of dimension 2
+   *   [Landmark measurement uncertainty [x [m], y [m]]]
+   * @param observations Vector of landmark observations
+   * @param map Vector containing map landmarks
+   */
+  void updateWeights(double sensor_range, double std_landmark[],
+                     const std::vector<landmark_t> &observations,
+                     const std::vector<landmark_t> &map_landmarks);
+
+  /*
+   * returns the current particle state as json string
+   */
+  std::string particles_json();
 
   /**
    * initialized returns whether particle filter is initialized yet or not.
@@ -52,8 +79,6 @@ class ParticleFilter {
   }
 
  private:
-
-
   // Number of particles to draw
   int num_particles_;
 
@@ -62,6 +87,9 @@ class ParticleFilter {
 
   // Set of current particles
   std::vector<particle_t> particles_;
+
+  // generator for random distributions
+  std::default_random_engine gen_;
 };
 
 
