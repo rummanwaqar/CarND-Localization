@@ -101,6 +101,32 @@ void ParticleFilter::dataAssociation(std::vector<landmark_t> predicted, std::vec
   }
 }
 
+void ParticleFilter::resample() {
+  // using resampling wheel method
+  std::vector<particle_t> new_particles;
+
+  std::vector<double> weights;
+  for(auto const& p : particles_) {
+    weights.push_back(p.weight);
+  }
+  double max_weight = *max_element(weights.begin(), weights.end());
+  std::uniform_real_distribution<double> uniformdist_weight(0.0, 2 * max_weight);
+
+  // generate random starting index for resampling wheel
+  std::uniform_int_distribution<int> uniformdist_index(0, num_particles_-1);
+  auto index = uniformdist_index(gen_);
+
+  double beta = 0;
+  for(int i=0; i<num_particles_; i++) {
+    beta += uniformdist_weight(gen_);
+    while(weights[index] < beta) {
+      beta -= weights[index];
+      index = (index + 1) % num_particles_;
+    }
+    new_particles.push_back(particles_[index]);
+  }
+  particles_ = new_particles;
+}
 
 std::string ParticleFilter::particles_json() {
   auto j = nlohmann::json();
@@ -115,6 +141,8 @@ std::string ParticleFilter::particles_json() {
   }
   return j.dump();
 }
+
+
 
 
 

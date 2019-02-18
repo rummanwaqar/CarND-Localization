@@ -43,6 +43,7 @@ int main() {
 
     // Update the weights and resample
     particle_filter.updateWeights(sensor_range, sigma_landmark, observations, map);
+    particle_filter.resample();
 
 
     particle_t best_particle;

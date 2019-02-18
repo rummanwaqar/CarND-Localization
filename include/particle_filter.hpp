@@ -4,6 +4,7 @@
 #include <random>
 #include <cmath>
 #include <limits>
+#include <algorithm>
 #include "json.h"
 
 #include "types.hpp"
@@ -65,6 +66,12 @@ class ParticleFilter {
   void updateWeights(double sensor_range, double std_landmark[],
                      const std::vector<landmark_t> &observations,
                      const std::vector<landmark_t> &map_landmarks);
+
+  /**
+   * resamples from the updated set of particles to form
+   *   the new set of particles.
+   */
+  void resample();
 
   /*
    * returns the current particle state as json string
