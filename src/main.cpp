@@ -45,12 +45,7 @@ int main() {
     particle_filter.updateWeights(sensor_range, sigma_landmark, observations, map);
     particle_filter.resample();
 
-
-    particle_t best_particle;
-    best_particle.x = sense_x;
-    best_particle.y = sense_y;
-    best_particle.theta = sense_theta;
-    best_particle.associations = {1,2,3};
+    particle_t best_particle = particle_filter.get_best_particle();
     return best_particle;
   });
 

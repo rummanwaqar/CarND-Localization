@@ -73,10 +73,10 @@ class ParticleFilter {
    */
   void resample();
 
-  /*
-   * returns the current particle state as json string
+  /**
+   * returns the best particle from the filter
    */
-  std::string particles_json();
+  particle_t get_best_particle();
 
   /**
    * initialized returns whether particle filter is initialized yet or not.

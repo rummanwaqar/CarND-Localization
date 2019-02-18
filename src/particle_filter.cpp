@@ -71,6 +71,16 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     // updates map_observations with associations
     dataAssociation(predictions, map_observations);
 
+    // update association debug structures
+    p.associations.clear();
+    p.sense_x.clear();
+    p.sense_y.clear();
+    for(auto const& obs : map_observations) {
+      p.associations.push_back(obs.id);
+      p.sense_x.push_back(obs.x);
+      p.sense_y.push_back(obs.y);
+    }
+
     // calculate weights
     p.weight = 1.0;
     for(auto const& obs : map_observations) {
@@ -81,6 +91,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
           prediction = pred;
         }
       }
+      // update weight
       p.weight *= gaussian2d(obs.x, obs.y, prediction.x, prediction.y, std_landmark[0], std_landmark[1]);
     }
   }
@@ -128,20 +139,22 @@ void ParticleFilter::resample() {
   particles_ = new_particles;
 }
 
-std::string ParticleFilter::particles_json() {
-  auto j = nlohmann::json();
-  for(auto const& p:particles_) {
-    auto p_j = nlohmann::json();
-    p_j["id"] = p.id;
-    p_j["x"] = p.x;
-    p_j["y"] = p.y;
-    p_j["theta"] = p.theta;
-    p_j["weight"] = p.weight;
-    j.push_back(p_j);
-  }
-  return j.dump();
-}
+particle_t ParticleFilter::get_best_particle() {
+  double highest_weight = -1.0;
+  particle_t best_particle{};
+  double weight_sum = 0.0;
 
+  for (auto const& p : particles_) {
+    if (p.weight > highest_weight) {
+      highest_weight = p.weight;
+      best_particle = p;
+    }
+    weight_sum += p.weight;
+  }
+  std::cout << "highest w " << highest_weight << std::endl;
+  std::cout << "average w " << weight_sum/num_particles_ << std::endl;
+  return best_particle;
+}
 
 
 
