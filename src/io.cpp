@@ -49,7 +49,7 @@ SimIO::SimIO(int port, ProcessCb cb) : port_(port), callbackFunc_(cb) {
           msgJson["best_particle_sense_x"] = vec_to_string(best_particle.sense_x);
           msgJson["best_particle_sense_y"] = vec_to_string(best_particle.sense_y);
           auto msg = "42[\"best_particle\"," + msgJson.dump() + "]";
-          std::cout << msg << std::endl;
+          // std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
