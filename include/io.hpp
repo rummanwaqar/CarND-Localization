@@ -14,7 +14,7 @@
 
 // callback function definition
 // takes observations and control data
-typedef std::function< void(double sense_x, double sense_y, double sense_theta,
+typedef std::function< particle_t(double sense_x, double sense_y, double sense_theta,
   double prev_velocity, double prev_yawrate, std::vector<landmark_t> observations) > ProcessCb;
 
 /*

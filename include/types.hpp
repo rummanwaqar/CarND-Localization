@@ -10,6 +10,18 @@ struct landmark_t {
   float y;    // y-position
 };
 
+// represents a single particle state
+struct particle_t {
+  int id;
+  double x;
+  double y;
+  double theta;
+  double weight;
+  std::vector<int> associations;
+  std::vector<double> sense_x;
+  std::vector<double> sense_y;
+};
+
 
 
 #endif

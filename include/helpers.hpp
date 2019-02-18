@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <exception>
 
 #include "types.hpp"
@@ -44,6 +45,18 @@ inline std::vector<float> string_to_vec(std::string str) {
   std::istringstream iss(str);
   std::copy(std::istream_iterator<float>(iss), std::istream_iterator<float>(), std::back_inserter(vec));
   return vec;
+}
+
+/*
+ * Convert a vector to space seperated string
+ */
+template <class T>
+inline std::string vec_to_string(std::vector<T> v) {
+  std::stringstream ss;
+  copy(v.begin(), v.end(), std::ostream_iterator<T>(ss, " "));
+  std::string s = ss.str();
+  s = s.substr(0, s.length()-1);  // get rid of the trailing space
+  return s;
 }
 
 #endif

@@ -26,7 +26,12 @@ int main() {
 
   std::cout << "Connecting to simulator" << std::endl;
   SimIO simulator(PORT, [&](double sense_x, double sense_y, double sense_theta, double prev_velocity, double prev_yawrate, std::vector<landmark_t> observations) {
-    std::cout << sense_x << std::endl;
+    particle_t best_particle;
+    best_particle.x = sense_x;
+    best_particle.y = sense_y;
+    best_particle.theta = sense_theta;
+    best_particle.associations = {1,2,3};
+    return best_particle;
   });
 
   simulator.run();

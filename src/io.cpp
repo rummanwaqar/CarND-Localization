@@ -37,18 +37,19 @@ SimIO::SimIO(int port, ProcessCb cb) : port_(port), callbackFunc_(cb) {
           }
 
           // process
-          callbackFunc_(sense_x, sense_y, sense_theta, previous_velocity, previous_yawrate, std::move(noisy_observations));
+          particle_t best_particle = callbackFunc_(sense_x, sense_y, sense_theta, previous_velocity, previous_yawrate, std::move(noisy_observations));
 
           // send output
           nlohmann::json msgJson;
-          msgJson["best_particle_x"] = 0;
-          msgJson["best_particle_y"] = 0;
-          msgJson["best_particle_theta"] = 0;
+          msgJson["best_particle_x"] = best_particle.x;
+          msgJson["best_particle_y"] = best_particle.y;
+          msgJson["best_particle_theta"] = best_particle.theta;
           // Optional message data used for debugging particle's sensing and associations
-          // msgJson["best_particle_associations"] = 0;
-          // msgJson["best_particle_sense_x"] = 0;
-          // msgJson["best_particle_sense_y"] = 0;
+          msgJson["best_particle_associations"] = vec_to_string(best_particle.associations);
+          msgJson["best_particle_sense_x"] = vec_to_string(best_particle.sense_x);
+          msgJson["best_particle_sense_y"] = vec_to_string(best_particle.sense_y);
           auto msg = "42[\"best_particle\"," + msgJson.dump() + "]";
+          std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
         }
       } else {
