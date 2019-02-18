@@ -79,6 +79,12 @@ class ParticleFilter {
   particle_t get_best_particle();
 
   /**
+   * calculates weighted error for particles
+   * @param ground truth
+   */
+  double weighted_error(double gt_x, double gt_y, double gt_theta);
+
+  /**
    * initialized returns whether particle filter is initialized yet or not.
    */
   const bool initialized() const {

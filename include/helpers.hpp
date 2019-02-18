@@ -29,6 +29,25 @@ inline double gaussian2d(double x, double y, double ux, double uy, double sigmax
 }
 
 /**
+ * Computes the error (euclidean distance) between ground truth and particle filter data
+ * @param (gt_x, gt_y, gt_theta) x, y and theta of ground truth
+ * @param (pf_x, pf_y, pf_theta) x, y and theta of particle filter
+ * @output Error distance
+ */
+inline double getError(double gt_x, double gt_y, double gt_theta, double pf_x,
+                         double pf_y, double pf_theta) {
+  static double error[3];
+  error[0] = fabs(pf_x - gt_x);
+  error[1] = fabs(pf_y - gt_y);
+  error[2] = fabs(pf_theta - gt_theta);
+  error[2] = fmod(error[2], 2.0 * M_PI);
+  if (error[2] > M_PI) {
+    error[2] = 2.0 * M_PI - error[2];
+  }
+  return std::sqrt(error[0] * error[0] + error[1] * error[1] + error[2] * error[2]);
+}
+
+/**
  * Reads map data from a file.
  * @param filename Name of file containing map data.
  * @output map as a vector of landmark_t

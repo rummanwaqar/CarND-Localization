@@ -151,9 +151,17 @@ particle_t ParticleFilter::get_best_particle() {
     }
     weight_sum += p.weight;
   }
-  std::cout << "highest w " << highest_weight << std::endl;
-  std::cout << "average w " << weight_sum/num_particles_ << std::endl;
   return best_particle;
+}
+
+double ParticleFilter::weighted_error(double gt_x, double gt_y, double gt_theta) {
+  double error_sum = 0;
+  double weight_sum = 0;
+  for(auto const& p : particles_) {
+    error_sum += p.weight * getError(gt_x, gt_y, gt_theta, p.x, p.y, p.theta);
+    weight_sum += p.weight;
+  }
+  return error_sum/weight_sum;
 }
 
 
