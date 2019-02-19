@@ -27,22 +27,21 @@ void ParticleFilter::prediction(double delta_t, double velocity, double yaw_rate
   std::normal_distribution<double> noise_y(0.0, std[1]);
   std::normal_distribution<double> noise_t(0.0, std[2]);
 
-  if(std::abs(yaw_rate) > 0.0005) { // non-zero yaw rate
-    for(int i=0; i<num_particles_; i++) {
-      particles_[i].theta += yaw_rate * delta_t + noise_t(gen_);
-      particles_[i].theta = std::fmod(particles_[i].theta, 2*M_PI);
-
+  for(int i=0; i<num_particles_; i++) {
+    if(std::abs(yaw_rate) > 0.00001) { // non-zero yaw rate
+      particles_[i].theta += yaw_rate * delta_t;
       particles_[i].x += velocity / yaw_rate * (std::sin(particles_[i].theta + yaw_rate * delta_t) -
-                                                std::sin(particles_[i].theta)) + noise_x(gen_);
+                                                std::sin(particles_[i].theta));
 
       particles_[i].y += velocity / yaw_rate * (std::cos(particles_[i].theta) -
-                                                std::cos(particles_[i].theta + yaw_rate * delta_t)) + noise_y(gen_);
+                                                std::cos(particles_[i].theta + yaw_rate * delta_t));
+    } else { // zero yaw rate
+      particles_[i].x += velocity * delta_t * std::cos(particles_[i].theta);
+      particles_[i].y += velocity * delta_t * std::sin(particles_[i].theta);
     }
-  } else { // zero yaw rate
-    for(int i=0; i<num_particles_; i++) {
-      particles_[i].x += velocity * delta_t * std::cos(particles_[i].theta) + noise_x(gen_);
-      particles_[i].y += velocity * delta_t * std::sin(particles_[i].theta) + noise_y(gen_);
-    }
+    particles_[i].x += noise_x(gen_);
+    particles_[i].y += noise_y(gen_);
+    particles_[i].theta = std::fmod(particles_[i].theta + noise_t(gen_), 2*M_PI);
   }
 }
 
@@ -143,7 +142,6 @@ particle_t ParticleFilter::get_best_particle() {
   double highest_weight = -1.0;
   particle_t best_particle{};
   double weight_sum = 0.0;
-
   for (auto const& p : particles_) {
     if (p.weight > highest_weight) {
       highest_weight = p.weight;
